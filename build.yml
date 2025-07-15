@@ -1,0 +1,30 @@
+name: Build bigbase.dll
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up CMake
+      uses: lukka/get-cmake@v3.28.3
+
+    - name: Configure CMake for Visual Studio 2019
+      run: cmake -S . -B build -G "Visual Studio 16 2019"
+
+    - name: Build DLL (Release)
+      run: cmake --build build --config Release
+
+    - name: Upload bigbase.dll artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: bigbase.dll
+        path: build/**/bigbase.dll
